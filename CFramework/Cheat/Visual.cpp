@@ -209,20 +209,26 @@ void CFramework::RenderESP()
             ArmorBar(right + 3, bottom + 1, 1, -Height - 1, pEntity->m_ArmorValue, pEntity->m_iMaxHealth); // Armor
         }
 
-        // Distance
-        if (g.g_ESP_Distance) {
-            const std::string distStr = std::to_string((int)pDistance) + "m";
-            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(distStr.c_str()).x / 2.f), bottom), TEXT_COLOR, ImGui::GetFontSize(), distStr.c_str());
-        }
-
         // Name
         if (g.g_ESP_Name) {
             StringEx(Vector2(right - Center - (ImGui::CalcTextSize(pEntity->pName).x / 2.f), top - ImGui::GetFontSize() - 1), TEXT_COLOR, ImGui::GetFontSize(), pEntity->pName);
         }
 
+        // 
+        std::string outStr;
+
+        // Distance
+        if (g.g_ESP_Distance) {
+            outStr += "[ " + std::to_string((int)pDistance) + "m ]";
+        }
+
         // Weapon
         if (g.g_ESP_CurrentWeapon) {
+            outStr += " " + pEntity->pWeaponName;
+        }
 
+        if (g.g_ESP_Distance || g.g_ESP_CurrentWeapon) {
+            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(outStr.c_str()).x / 2.f), bottom + 1), TEXT_COLOR, ImGui::GetFontSize(), outStr.c_str());
         }
     }
 
