@@ -1,5 +1,6 @@
 #include "Cheat/FrameCore.h"
 #include "Framework/Overlay/Overlay.h"
+#include "Framework/ImGui/Fonts/RobotoRegular.h"
 
 Overlay*	overlay = new Overlay;
 CFramework* cheat = new CFramework;
@@ -18,12 +19,14 @@ void Overlay::OverlayUserInit()
 	io.LogFilename = nullptr;
 
 	// Load Font
+	io.Fonts->AddFontFromMemoryCompressedTTF(RobotoRegular_compressed_data, RobotoRegular_compressed_size, 13.f, nullptr);
+
+	// Load Icon
 	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 	ImFontConfig icons_config;
 	icons_config.MergeMode = true;
 	icons_config.GlyphOffset.y = 2.f;
-	io.Fonts->AddFontDefault();
-	io.Fonts->AddFontFromMemoryCompressedTTF(FA_compressed_data, FA_compressed_size, 16.f, &icons_config, icons_ranges);
+	cheat->icon = io.Fonts->AddFontFromMemoryCompressedTTF(FA_compressed_data, FA_compressed_size, 16.f, &icons_config, icons_ranges);
 	io.Fonts->Build();
 }
 

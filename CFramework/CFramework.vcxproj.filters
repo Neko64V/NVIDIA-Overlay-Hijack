@@ -105,6 +105,9 @@
     <ClCompile Include="Framework\Overlay\Manager.cpp">
       <Filter>Framework\Overlay</Filter>
     </ClCompile>
+    <ClCompile Include="Framework\ImGui\imgui_freetype.cpp">
+      <Filter>Framework\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\ImGui\Custom.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Cheat\SDK\GameSDK\a2x\offsets.hpp">
       <Filter>Cheat\SDK\GameSDK\a2x</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\ImGui\imgui_freetype.h">
+      <Filter>Framework\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
