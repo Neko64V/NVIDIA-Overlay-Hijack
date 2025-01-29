@@ -15,14 +15,17 @@ struct Globals
     // Visual
     bool g_ESP      = true;
     bool g_ESP_Team = false;
+    bool g_ESP_C4   = true;
+    bool g_ESP_Weapon = false;
 
     bool g_ESP_Box  = true;
     bool g_ESP_BoxFilled = false;
     bool g_ESP_Line      = false;
     bool g_ESP_Skeleton  = true;
+    bool g_ESP_HealthBar = true;
     bool g_ESP_Name      = true;
     bool g_ESP_Distance  = true;
-    bool g_ESP_HealthBar = true;
+    bool g_ESP_CurrentWeapon = true;
     int g_ESP_BoxType    = 1;
     float g_ESP_MaxDistance = 100.f;
 
