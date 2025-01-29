@@ -31,7 +31,7 @@ public:
 	int m_ArmorValue;
 	uintptr_t m_pBoneArray;
 	char pName[32];
-	char pWeaponName[32];
+	std::string pWeaponName;
 
     // Functions
 	bool Update();

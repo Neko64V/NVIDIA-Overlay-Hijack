@@ -47,7 +47,10 @@ bool CEntity::UpdateStatic(const uintptr_t& entitylist)
 	uintptr_t pWeaponEntity = m.ReadChain(m_pClippingWeapon, { 0x10, 0x20 });
 
 	if (pWeaponEntity != NULL) {
-		m.ReadString(pWeaponEntity, pWeaponName, sizeof(pWeaponName));
+		pWeaponName = m.ReadString_s(pWeaponEntity);
+
+		if (pWeaponName.compare(0, 7, "weapon_") == 0)
+			pWeaponName = pWeaponName.substr(7, pWeaponName.length());
 	}
 
 	return true;
