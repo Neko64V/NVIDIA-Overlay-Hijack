@@ -59,6 +59,13 @@ public:
 		SIZE_T size_read;
 		return !!::ReadProcessMemory(m_hProcess, LPCVOID(address), buffer, size, &size_read) && size_read > 0;
 	}
+	std::string ReadString_s(uintptr_t address) const
+	{
+		char name[MAX_PATH]{};
+		ReadString(address, name, sizeof(name));
+
+		return std::string(name);
+	}
 };
 
 extern Memory m;
