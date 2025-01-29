@@ -29,12 +29,18 @@ namespace offset
 	// C_CSPlayerPawn
 	constexpr auto m_ArmorValue = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_ArmorValue;
 
+	// C_CSPlayerPawnBase
+	constexpr auto m_pClippingWeapon = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_pClippingWeapon;
+
 	// C_BasePlayerPawn
 	constexpr auto m_vOldOrigin = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_vOldOrigin;
 	constexpr auto m_pCameraServices = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_pCameraServices;
 
 	// CSkeletonInstance
 	constexpr auto m_modelState = cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState;
+
+	// CCSWeaponBaseVData
+	constexpr auto m_szName = cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_szName;
 };
 
 enum CBoneID
