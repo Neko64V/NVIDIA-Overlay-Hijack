@@ -22,8 +22,8 @@ void CFramework::RenderInfo()
         {
         case 0: {
             ImVec2 Center = ImVec2(g.g_GameRect.right / 2, g.g_GameRect.bottom / 2);
-            ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Center.x - g.g_CrosshairSize, Center.y), ImVec2((Center.x + g.g_CrosshairSize) + 1, Center.y), CrosshairColor, 1);
-            ImGui::GetBackgroundDrawList()->AddLine(ImVec2(Center.x, Center.y - g.g_CrosshairSize), ImVec2(Center.x, (Center.y + g.g_CrosshairSize) + 1), CrosshairColor, 1);
+            DrawLine(Vector2(Center.x - g.g_CrosshairSize, Center.y), Vector2((Center.x + g.g_CrosshairSize) + 1, Center.y), CrosshairColor, 1);
+            DrawLine(Vector2(Center.x, Center.y - g.g_CrosshairSize), Vector2(Center.x, (Center.y + g.g_CrosshairSize) + 1), CrosshairColor, 1);
         }   break;
         case 1:
             ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2((float)g.g_GameRect.right / 2.f, (float)g.g_GameRect.bottom / 2.f), g.g_CrosshairSize + 1, ImColor(0.f, 0.f, 0.f, 1.f), NULL);
@@ -130,13 +130,16 @@ void CFramework::RenderESP()
         {
             // BoxFilled
             if (g.g_ESP_BoxFilled)
-                ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(left, top), ImVec2(right, bottom), ESP_Shadow);
+                RectFilled(left, top,right, bottom, ESP_Shadow, 0.f, NULL);
 
             // Shadow
+            /*
             DrawLine(Vector2(left - 1, top - 1), Vector2(right + 2, top - 1), ESP_Shadow, 1.f);
             DrawLine(Vector2(left - 1, top), Vector2(left - 1, bottom + 2), ESP_Shadow, 1.f);
             DrawLine(Vector2(right + 1, top), Vector2(right + 1, bottom + 2), ESP_Shadow, 1.f);
             DrawLine(Vector2(left - 1, bottom + 1), Vector2(right + 1, bottom + 1), ESP_Shadow, 1.f);
+            */
+            DrawBox(right + 1, left - 1, top - 1, bottom + 1, ESP_Shadow, 1.f);
 
             switch (g.g_ESP_BoxType)
             {
@@ -215,6 +218,11 @@ void CFramework::RenderESP()
         // Name
         if (g.g_ESP_Name) {
             StringEx(Vector2(right - Center - (ImGui::CalcTextSize(pEntity->pName).x / 2.f), top - ImGui::GetFontSize() - 1), TEXT_COLOR, ImGui::GetFontSize(), pEntity->pName);
+        }
+
+        // Weapon
+        if (g.g_ESP_CurrentWeapon) {
+
         }
     }
 

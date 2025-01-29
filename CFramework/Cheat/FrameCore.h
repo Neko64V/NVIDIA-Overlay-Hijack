@@ -34,6 +34,9 @@ private:
     ImColor CrosshairColor = { 0.f, 1.f, 0.f, 1.f };
     ImColor TEXT_COLOR = { 1.f, 1.f, 1.f, m_flGlobalAlpha };
 
+    // Menu
+    int Index = 0;
+
     // int‚É‚µ‚È‚¢‚ÆŸø‚Þ
     void DrawLine(const Vector2 a, const Vector2 b, ImColor color, float width) {
         ImGui::GetWindowDrawList()->AddLine(ImVec2((int)a.x + g.g_GamePoint.x, (int)a.y + g.g_GamePoint.y), ImVec2((int)b.x + g.g_GamePoint.x, (int)b.y + g.g_GamePoint.y), color, width);
@@ -42,7 +45,7 @@ private:
         DrawLine(Vector2(left, top), Vector2(right, top), color, 1.f);
         DrawLine(Vector2(left, top), Vector2(left, bottom), color, 1.f);
         DrawLine(Vector2(right, top), Vector2(right, bottom), color, 1.f);
-        DrawLine(Vector2(left, bottom), Vector2(right + 1, bottom), color, 1.f);
+        DrawLine(Vector2(left, bottom), Vector2(right, bottom), color, 1.f);
     }
     void RectFilled(float x0, float y0, float x1, float y1, ImColor color, float rounding, int rounding_corners_flags)
     {

@@ -10,7 +10,6 @@ std::vector<const char*> MenuIconList = { ICON_FA_CROSSHAIRS, ICON_FA_EYE, ICON_
 void CFramework::RenderMenu()
 {
     // Setup
-    static int Index = 0;
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
     
@@ -23,12 +22,14 @@ void CFramework::RenderMenu()
 
     static float size = ImGui::GetContentRegionAvail().x;
 
-    ImGui::BeginChild("##IMG", ImVec2(size, size), true);
+    ImGui::BeginChild("##IMG", ImVec2(size, size), false);
 
 
 
     ImGui::EndChild();
 
+    ImGui::Spacing();
+    ImGui::Separator();
     ImGui::Spacing();
 
     ImGui::PushFont(icon);
@@ -54,7 +55,10 @@ void CFramework::RenderMenu()
 
     switch (Index)
     {
-    case 0: // visual
+    case 0:
+
+        break;
+    case 1: // visual
         ImGui::BeginChild("##C010", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 3.f), true);
         ImGui::Text("Visual");
         ImGui::Separator();
@@ -63,6 +67,9 @@ void CFramework::RenderMenu()
         ImGui::Checkbox("ESP", &g.g_ESP);
         ImGui::Checkbox("Team ESP", &g.g_ESP_Team);
 
+        ImGui::Checkbox("C4", &g.g_ESP_C4);
+        ImGui::Checkbox("Weapon", &g.g_ESP_Weapon);
+       
         ImGui::EndChild();
         ImGui::BeginChild("##C011", ImVec2(ImGui::GetContentRegionAvail()), true);
 
@@ -77,15 +84,16 @@ void CFramework::RenderMenu()
         ImGui::Checkbox("HealthBar", &g.g_ESP_HealthBar);
         ImGui::Checkbox("Name", &g.g_ESP_Name);
         ImGui::Checkbox("Distance", &g.g_ESP_Distance);
-       
+        ImGui::Checkbox("Weapon", &g.g_ESP_CurrentWeapon);
+
         ImGui::EndChild();
         break;
-    case 1: { // misc
+    case 2: { // misc
         ImGui::BeginChild("##C020", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 3.f), true);
 
         ImGui::EndChild();
     } break;
-    case 2: // system
+    case 3: // system
         ImGui::BeginChild("##C030", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 1.75f), true);
 
         ImGui::Text("System");
@@ -123,7 +131,10 @@ void CFramework::RenderMenu()
 
     switch (Index)
     {
-    case 0: // visual
+    case 0:
+
+        break;
+    case 1: // visual
         ImGui::BeginChild("##C110", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 2.75f), true);
 
         ImGui::Text("ESP Setting");
@@ -157,12 +168,12 @@ void CFramework::RenderMenu()
 
         ImGui::EndChild();
         break;
-    case 1: // misc
+    case 2: // misc
         ImGui::BeginChild("##120", ImVec2(ImGui::GetContentRegionAvail()), true);
 
         ImGui::EndChild();
         break;
-    case 2: // system
+    case 3: // system
         ImGui::BeginChild("##130", ImVec2(ImGui::GetContentRegionAvail()), true);
 
         ImGui::Text("Exit");
