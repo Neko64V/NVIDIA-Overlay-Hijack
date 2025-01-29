@@ -3,26 +3,18 @@
 // ImGui::Combo/ImGui::List等で使う文字列群
 const char* BoxTypeList[] = { "Simple", "Cornered" };
 const char* CrosshairList[] = { "Cross", "Circle" };
-std::vector<const char*> MenuSelectList = { "Visual", "Misc", "System" };
-std::vector<const char*> MenuSelectIconList = { ICON_FA_EYE, ICON_FA_ATOM, ICON_FA_GEAR };
+std::vector<const char*> MenuStringList = { "AimBot", "Visual", "Misc", "Setting" };
+std::vector<const char*> MenuIconList = { ICON_FA_CROSSHAIRS, ICON_FA_EYE, ICON_FA_BARS, ICON_FA_GEAR };
 
 // チートのメニュー
 void CFramework::RenderMenu()
 {
     // Setup
-    ImVec4* colors = ImGui::GetStyle().Colors;
-    ImGuiStyle& style = ImGui::GetStyle();
-    static float DefaultSpacing = style.ItemSpacing.y;
     static int Index = 0;
-    static int BindingID = 0;
-
-    ESP_Default.Value.w = m_flGlobalAlpha;
-    ESP_Visible.Value.w = m_flGlobalAlpha;
-    ESP_Team.Value.w    = m_flGlobalAlpha;
-    ESP_Shadow.Value.w  = m_flShadowAlpha;
-    TEXT_COLOR.Value.w  = m_flGlobalAlpha;
-
-    ImGui::SetNextWindowBgAlpha(0.975f);
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImVec4* colors = style.Colors;
+    
+    //ImGui::SetNextWindowBgAlpha(0.975f);
     ImGui::SetNextWindowSize(ImVec2(725.f, 450.f));
     ImGui::Begin("Counter-Strike 2 [ EXTERNAL ]", &g.g_ShowMenu, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
@@ -37,13 +29,17 @@ void CFramework::RenderMenu()
 
     ImGui::EndChild();
 
-    ImGui::NewLine();
+    ImGui::Spacing();
 
-    for (int i = 0; i < MenuSelectList.size(); i++)
+    ImGui::PushFont(icon);
+
+    for (int i = 0; i < MenuIconList.size(); i++)
     {
-        if (ImGui::CustomButton(MenuSelectIconList[i], ImVec2(ImGui::GetContentRegionAvail().x, 35.f), Index == i ? true : false))
+        if (ImGui::CustomButton(MenuIconList[i], MenuStringList[i], ImVec2(ImGui::GetContentRegionAvail().x, 35.f), Index == i ? true : false))
             Index = i;
     }
+
+    ImGui::PopFont();
 
     ImGui::EndChild();
     //---// Clild 0 End //-------------------------------//

@@ -2,6 +2,13 @@
 
 void CFramework::RenderInfo()
 {
+    // Update colors
+    ESP_Default.Value.w = m_flGlobalAlpha;
+    ESP_Visible.Value.w = m_flGlobalAlpha;
+    ESP_Team.Value.w = m_flGlobalAlpha;
+    ESP_Shadow.Value.w = m_flShadowAlpha;
+    TEXT_COLOR.Value.w = m_flGlobalAlpha;
+
     ImGui::SetNextWindowPos(ImVec2(g.g_GamePoint.x, g.g_GamePoint.y));
     ImGui::SetNextWindowSize(ImVec2(g.g_GameRect.right, g.g_GameRect.bottom));
     ImGui::Begin("##Info", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
@@ -202,7 +209,7 @@ void CFramework::RenderESP()
         // Distance
         if (g.g_ESP_Distance) {
             const std::string distStr = std::to_string((int)pDistance) + "m";
-            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(distStr.c_str()).x / 2.f), bottom + 1), TEXT_COLOR, ImGui::GetFontSize(), distStr.c_str());
+            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(distStr.c_str()).x / 2.f), bottom), TEXT_COLOR, ImGui::GetFontSize(), distStr.c_str());
         }
 
         // Name

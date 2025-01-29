@@ -6,10 +6,13 @@
 #include "../Framework/ImGui/Fonts/IconsFontAwesome6.h"
 #include "../Framework/ImGui/Custom.h"
 #include "SDK/CEntity/CEntity.h"
+#pragma comment(lib, "freetype.lib")
 
 class CFramework
 {
 public:
+    ImFont* icon;
+
     void UpdateList();
 
 	void RenderInfo();
@@ -28,9 +31,7 @@ private:
     ImColor ESP_Visible = { 1.f, 0.f, 0.f, m_flGlobalAlpha };
     ImColor ESP_Team    = { 0.f, 0.75f, 1.f, m_flGlobalAlpha };
     ImColor ESP_Shadow  = { 0.f, 0.f, 0.f, m_flShadowAlpha };
-
     ImColor CrosshairColor = { 0.f, 1.f, 0.f, 1.f };
-
     ImColor TEXT_COLOR = { 1.f, 1.f, 1.f, m_flGlobalAlpha };
 
     // int‚É‚µ‚È‚¢‚ÆŸø‚Þ
