@@ -123,7 +123,7 @@ void CFramework::RenderESP()
 
         // Line
         if (g.g_ESP_Line)
-            DrawLine(Vector2((g.g_GameRect.right / 2.f) + g.g_GamePoint.x, g.g_GameRect.bottom + g.g_GamePoint.y), Vector2(right - (Width / 2), bottom), color, 1.f);
+            DrawLine(Vector2(g.g_GameRect.right / 2.f, g.g_GameRect.bottom), Vector2(right - (Width / 2), bottom), color, 1.f);
 
         // Box
         if (g.g_ESP_Box)
