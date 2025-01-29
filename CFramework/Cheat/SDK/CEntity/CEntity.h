@@ -14,10 +14,11 @@ class CEntity
 {
 public:
     uintptr_t address;
-	uintptr_t CCSPlayerPawn;
+	uintptr_t m_pCSPlayerPawn;
 	uintptr_t m_pGameSceneNode;
 	uintptr_t m_pCameraServices;
 	uintptr_t m_pCollision;
+	uintptr_t m_pClippingWeapon;
 
 	// Player
 	Vector3 m_vecAbsVelocity;
@@ -30,6 +31,7 @@ public:
 	int m_ArmorValue;
 	uintptr_t m_pBoneArray;
 	char pName[32];
+	char pWeaponName[32];
 
     // Functions
 	bool Update();
