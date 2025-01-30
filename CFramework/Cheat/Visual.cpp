@@ -6,7 +6,6 @@ void CFramework::RenderInfo()
     ESP_Default.Value.w = m_flGlobalAlpha;
     ESP_Visible.Value.w = m_flGlobalAlpha;
     ESP_Team.Value.w = m_flGlobalAlpha;
-    ESP_Shadow.Value.w = m_flShadowAlpha;
     TEXT_COLOR.Value.w = m_flGlobalAlpha;
 
     ImGui::SetNextWindowPos(ImVec2(g.g_GamePoint.x, g.g_GamePoint.y));
@@ -50,6 +49,24 @@ void CFramework::RenderESP()
     ImGui::SetNextWindowSize(ImVec2(g.g_GameRect.right, g.g_GameRect.bottom));
     ImGui::Begin("##Overlay", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground);
     
+    // C4 dev
+    uintptr_t c4_ptr = m.Read<uintptr_t>(m.m_gClientBaseAddr + offset::dwPlantedC4);
+
+    if (c4_ptr != NULL) {
+
+        C4->address = m.Read<uintptr_t>(c4_ptr);
+        Vector3 GamePositon = C4->GetAbsOrigin();
+
+        if (!Vec3_Empty(GamePositon)) {
+            Vector2 pos{};
+            WorldToScreen(ViewMatrix, g.g_GameRect, GamePositon, pos);
+
+            std::string vout = "C4";// + std::to_string((int)C4->GetTimer()) + "sec";
+            String(Vector2(pos.x - (ImGui::CalcTextSize(vout.c_str()).x / 2.f), pos.y - ImGui::GetFontSize() - 1.f), ImColor(0.f, 1.f, 0.f, 1.f), vout.c_str());
+            Circle(pos, 2.f, ImColor(0.f, 1.f, 0.f, 1.f));
+        }
+    }
+
     // るーぷするよ
     for (auto& entity : EntityList)
     {
@@ -211,7 +228,7 @@ void CFramework::RenderESP()
 
         // Name
         if (g.g_ESP_Name) {
-            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(pEntity->pName).x / 2.f), top - ImGui::GetFontSize() - 1), TEXT_COLOR, ImGui::GetFontSize(), pEntity->pName);
+            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(pEntity->pName).x / 2.f), top - ImGui::GetFontSize()), TEXT_COLOR, ImGui::GetFontSize() - 1, pEntity->pName);
         }
 
         // 

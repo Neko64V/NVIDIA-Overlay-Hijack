@@ -6,6 +6,7 @@
 #include "../Framework/ImGui/Fonts/IconsFontAwesome6.h"
 #include "../Framework/ImGui/Custom.h"
 #include "SDK/CEntity/CEntity.h"
+#include "SDK/CC4/CC4.h"
 #pragma comment(lib, "freetype.lib")
 
 class CFramework
@@ -21,6 +22,7 @@ public:
 private:
     // Entity
     CEntity local, *pLocal = &local;
+    CC4 c4, *C4 = &c4;
     std::vector<CEntity> EntityList;
     std::vector<std::string> SpectatorPlayerName;
 
@@ -71,7 +73,7 @@ private:
     }
     void StringEx(Vector2 pos, ImColor color, float font_size, const char* text)
     {
-        ImGui::GetWindowDrawList()->AddText(ImGui::GetFont(), font_size, ImVec2((int)pos.x + g.g_GamePoint.x + 1.f, (int)pos.y + g.g_GamePoint.y + 1.f), ImColor(ESP_Shadow.Value.x, ESP_Shadow.Value.y, ESP_Shadow.Value.z, ESP_Shadow.Value.w), text, text + strlen(text), 1024, 0);
+        ImGui::GetWindowDrawList()->AddText(ImGui::GetFont(), font_size, ImVec2((int)pos.x + g.g_GamePoint.x + 1.f, (int)pos.y + g.g_GamePoint.y + 1.f), ImColor(ESP_Shadow.Value.x, ESP_Shadow.Value.y, ESP_Shadow.Value.z, m_flShadowAlpha), text, text + strlen(text), 1024, 0);
         ImGui::GetWindowDrawList()->AddText(ImGui::GetFont(), font_size, ImVec2((int)pos.x + g.g_GamePoint.x, (int)pos.y + g.g_GamePoint.y), color, text, text + strlen(text), 1024, 0);
     }
 };
