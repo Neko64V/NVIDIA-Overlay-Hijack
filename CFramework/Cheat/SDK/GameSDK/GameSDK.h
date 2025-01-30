@@ -12,12 +12,13 @@ namespace offset
 	constexpr auto dwViewRender		= cs2_dumper::offsets::client_dll::dwViewRender;
 	constexpr auto dwViewMatrix		= cs2_dumper::offsets::client_dll::dwViewMatrix;
 	constexpr auto dwViewAngles		= cs2_dumper::offsets::client_dll::dwViewAngles;
-
+	constexpr auto dwGlobalVars		= cs2_dumper::offsets::client_dll::dwGlobalVars;
+	constexpr auto dwPlantedC4		= cs2_dumper::offsets::client_dll::dwPlantedC4;
+	
 	// CCSPlayerControlle
 	constexpr auto m_hPlayerPawn = cs2_dumper::schemas::client_dll::CCSPlayerController::m_hPlayerPawn;
 	constexpr auto m_sSanitizedPlayerName = cs2_dumper::schemas::client_dll::CCSPlayerController::m_sSanitizedPlayerName;
 
-	// C_BaseEntity
 	constexpr auto m_fFlags = cs2_dumper::schemas::client_dll::C_BaseEntity::m_fFlags;
 	constexpr auto m_iHealth = cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth;
 	constexpr auto m_iMaxHealth = cs2_dumper::schemas::client_dll::C_BaseEntity::m_iMaxHealth;
@@ -25,22 +26,16 @@ namespace offset
 	constexpr auto m_lifeState = cs2_dumper::schemas::client_dll::C_BaseEntity::m_lifeState;
 	constexpr auto m_pCollision = cs2_dumper::schemas::client_dll::C_BaseEntity::m_pCollision;
 	constexpr auto m_pGameSceneNode = cs2_dumper::schemas::client_dll::C_BaseEntity::m_pGameSceneNode;
-
-	// C_CSPlayerPawn
 	constexpr auto m_ArmorValue = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_ArmorValue;
-
-	// C_CSPlayerPawnBase
 	constexpr auto m_pClippingWeapon = cs2_dumper::schemas::client_dll::C_CSPlayerPawnBase::m_pClippingWeapon;
-
-	// C_BasePlayerPawn
 	constexpr auto m_vOldOrigin = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_vOldOrigin;
 	constexpr auto m_pCameraServices = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_pCameraServices;
-
-	// CSkeletonInstance
 	constexpr auto m_modelState = cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState;
-
-	// CCSWeaponBaseVData
 	constexpr auto m_szName = cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_szName;
+
+	// C4
+	constexpr auto m_flTimerLength = cs2_dumper::schemas::client_dll::C_PlantedC4::m_flTimerLength;
+	constexpr auto m_vecAbsOrigin = cs2_dumper::schemas::client_dll::CGameSceneNode::m_vecAbsOrigin;
 };
 
 enum CBoneID
