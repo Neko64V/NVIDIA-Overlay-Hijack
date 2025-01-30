@@ -49,6 +49,9 @@
     <Filter Include="Cheat\SDK\GameSDK\a2x">
       <UniqueIdentifier>{9c9a645b-ede4-491c-b2aa-ae5f18c9bcc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cheat\SDK\CC4">
+      <UniqueIdentifier>{9d402835-a486-474a-8be7-62b76df43b33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -106,6 +109,12 @@
       <Filter>Framework\Overlay</Filter>
     </ClCompile>
     <ClCompile Include="Framework\ImGui\imgui_freetype.cpp">
+      <Filter>Framework\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheat\SDK\CC4\CC4.cpp">
+      <Filter>Cheat\SDK\CC4</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\ImGui\imgui_demo.cpp">
       <Filter>Framework\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -172,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Framework\ImGui\imgui_freetype.h">
       <Filter>Framework\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheat\SDK\CC4\CC4.h">
+      <Filter>Cheat\SDK\CC4</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
