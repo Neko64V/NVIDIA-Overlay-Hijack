@@ -1,5 +1,8 @@
 #pragma once
+#include <ini.h>
+#include <vector>
 #include <Windows.h>
+#include <filesystem>
 
 struct Globals
 {
@@ -37,6 +40,25 @@ struct Globals
 
     // Key
     int g_MenuKey = VK_INSERT;
+};
+
+class ConfigManager
+{
+private:
+    mINI::INIStructure ini;
+public:
+    bool CheckDirectory(const char* path);
+    std::vector<std::string> GetFileList(const std::string& path);
+    void LoadConfig(const std::string& Name);
+    void SaveConfig(const std::string& Name);
+    void GenerateFile(const std::string& Name);
+
+    void DeleteConfig(std::string filename)
+    {
+        std::string tmp = ".\\Config\\" + filename;
+
+        std::filesystem::remove(tmp.c_str());
+    }
 };
 
 extern Globals g;
