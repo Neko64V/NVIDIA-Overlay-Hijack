@@ -57,9 +57,11 @@ void Overlay::OverlayManager()
     // ImGuiにマウス入力を渡す
     POINT MousePos{};
     GetCursorPos(&MousePos);
-    ImGui::GetIO().MousePos = ImVec2(MousePos.x, MousePos.y);
-    ImGui::GetIO().MouseDown[0] = IsKeyDown(VK_LBUTTON);
 
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.MousePos = ImVec2(MousePos.x, MousePos.y);
+    io.MouseDown[0] = IsKeyDown(VK_LBUTTON);
+    
     g.g_GameRect = TmpRect;
     g.g_GamePoint = TmpPoint;
 }
