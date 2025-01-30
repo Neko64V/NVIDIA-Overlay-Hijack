@@ -1,5 +1,9 @@
 #include "FrameCore.h"
 
+// Config
+ConfigManager Config;
+char ConfigPath[] = ".\\Config\\";
+
 // ImGui::Combo/ImGui::List等で使う文字列群
 const char* BoxTypeList[] = { "Simple", "Cornered" };
 const char* CrosshairList[] = { "Cross", "Circle" };
@@ -13,6 +17,11 @@ void CFramework::RenderMenu()
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
     
+    // Config
+    static int FileNum = 0;
+    static char InputName[12];
+    static bool DeleteFlag = false;
+
     //ImGui::SetNextWindowBgAlpha(0.975f);
     ImGui::SetNextWindowSize(ImVec2(725.f, 450.f));
     ImGui::Begin("Counter-Strike 2 [ EXTERNAL ]", &g.g_ShowMenu, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
@@ -22,15 +31,7 @@ void CFramework::RenderMenu()
 
     static float size = ImGui::GetContentRegionAvail().x;
 
-    ImGui::BeginChild("##IMG", ImVec2(size, size), false);
-
-
-
-    ImGui::EndChild();
-
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
+    ImGui::SetCursorPosY(25.f);
 
     ImGui::PushFont(icon);
 
@@ -53,12 +54,16 @@ void CFramework::RenderMenu()
     //---// Left //--------------------------------------//
     ImGui::BeginChild("##LeftChild", ImVec2(ImGui::GetContentRegionAvail().x / 2.f - (style.WindowPadding.x * 2), ImGui::GetContentRegionAvail().y), false);
 
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.f));
+
     switch (Index)
     {
     case 0:
 
         break;
     case 1: // visual
+       
+
         ImGui::BeginChild("##C010", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 3.f), true);
         ImGui::Text("Visual");
         ImGui::Separator();
@@ -121,6 +126,8 @@ void CFramework::RenderMenu()
         break;
     }
 
+    ImGui::PopStyleColor();
+
     ImGui::EndChild();
     //---------------------------------------------------//
 
@@ -128,6 +135,8 @@ void CFramework::RenderMenu()
 
     //---// Right //--------------------------------------//
     ImGui::BeginChild("##RightChild", ImVec2(ImGui::GetContentRegionAvail()), false);
+
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.f));
 
     switch (Index)
     {
@@ -174,7 +183,60 @@ void CFramework::RenderMenu()
         ImGui::EndChild();
         break;
     case 3: // system
-        ImGui::BeginChild("##130", ImVec2(ImGui::GetContentRegionAvail()), true);
+    {
+        ImGui::BeginChild("##130", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 1.25f), true);
+
+        ImGui::Text("Config");
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        auto vec = Config.GetFileList(ConfigPath);
+        const char** FileList = new const char* [vec.size()];
+
+        for (size_t j = 0; j < vec.size(); j++)
+            FileList[j] = vec[j].c_str();
+
+        ImGui::InputText("Name", InputName, IM_ARRAYSIZE(InputName));
+        if (ImGui::Button("Generate ConfigFile", ImVec2(ImGui::GetContentRegionAvail().x, 20.f))) {
+            std::thread([&]() {Config.GenerateFile(InputName); }).join();
+            ZeroMemory(InputName, sizeof(InputName));
+        }
+
+        ImGui::Spacing();
+        ImGui::Spacing();
+
+        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        ImGui::ListBox("##List", &FileNum, FileList, vec.size());
+
+        // Button
+        if (ImGui::Button("Save", ImVec2(ImGui::GetContentRegionAvail().x / 3.f - 4.f, 20.f)))
+            std::thread([&]() {Config.SaveConfig(InputName[0] != NULL ? InputName : FileList[FileNum]); }).join();
+        ImGui::SameLine();
+        if (ImGui::Button("Load", ImVec2(ImGui::GetContentRegionAvail().x / 2.f - 4.f, 20.f)) && vec.size() != 0)
+            std::thread([&]() {Config.LoadConfig(FileList[FileNum]); }).join();
+        ImGui::SameLine();
+        if (ImGui::Button("Delete", ImVec2(ImGui::GetContentRegionAvail().x, 20.f)) && vec.size() != 0)
+            DeleteFlag = true;
+
+        if (DeleteFlag)
+        {
+            ImGui::Text("Delete this file?");
+
+            if (ImGui::Button("OK", ImVec2(90.f, 20.f))) {
+                std::thread([&]() {Config.DeleteConfig(FileList[FileNum]); }).join();
+                DeleteFlag = false;
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Cancel", ImVec2(90.f, 20.f)))
+                DeleteFlag = false;
+        }
+
+        delete[] FileList;
+
+        ImGui::EndChild();
+        ImGui::BeginChild("##131", ImVec2(ImGui::GetContentRegionAvail()), true);
 
         ImGui::Text("Exit");
         ImGui::Separator();
@@ -183,10 +245,12 @@ void CFramework::RenderMenu()
             g.g_Run = false;
 
         ImGui::EndChild();
-        break;
+    }   break;
     default:
         break;
     }
+
+    ImGui::PopStyleColor();
 
     ImGui::EndChild();
     ImGui::EndChild();
