@@ -5,6 +5,36 @@ bool Vec3_Empty(const Vector3& value)
     return value == Vector3();
 }
 
+void NormalizeAngles(Vector3& angle)
+{
+    while (angle.x > 89.0f)
+        angle.x -= 180.f;
+
+    while (angle.x < -89.0f)
+        angle.x += 180.f;
+
+    while (angle.y > 180.f)
+        angle.y -= 360.f;
+
+    while (angle.y < -180.f)
+        angle.y += 360.f;
+}
+
+Vector3 CalcAngle(const Vector3& src, const Vector3& dst)
+{
+    Vector3 angle = Vector3();
+    Vector3 delta = Vector3((src.x - dst.x), (src.y - dst.y), (src.z - dst.z));
+
+    double distance = sqrt(delta.x * delta.x + delta.y * delta.y);
+
+    angle.x = atan(delta.z / distance) * (180.0f / 3.1415926535);
+    angle.y = atan(delta.y / delta.x) * (180.0f / 3.1415926535);
+    angle.z = 0;
+    if (delta.x >= 0.0) angle.y += 180.0f;
+
+    return angle;
+}
+
 bool WorldToScreen(Matrix ViewMatrix, RECT Size, Vector3 vIn, Vector2& vOut)
 {
     float w = ViewMatrix.m[3][0] * vIn.x + ViewMatrix.m[3][1] * vIn.y + ViewMatrix.m[3][2] * vIn.z + ViewMatrix.m[3][3];
