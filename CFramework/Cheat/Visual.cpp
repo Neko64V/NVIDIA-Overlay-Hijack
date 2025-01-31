@@ -12,12 +12,7 @@ void CFramework::RenderInfo()
     ImGui::SetNextWindowSize(ImVec2(g.g_GameRect.right, g.g_GameRect.bottom));
     ImGui::Begin("##Info", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
 
-    // FPS
     String(Vector2(), TEXT_COLOR, std::to_string((int)ImGui::GetIO().Framerate).c_str());
-
-    // FOV Circle
-    if (g.g_AimBot && g.g_ShowFOV)
-        Circle(Vector2((g.g_GameRect.right / 2.f), (g.g_GameRect.bottom / 2.f)), g.g_AimFOV, ImColor(AimFOV_Color));
 
     // Crosshair
     if (g.g_Crosshair)
@@ -39,46 +34,9 @@ void CFramework::RenderInfo()
     ImGui::End();
 }
 
-void NormalizeAngles(Vector3& angle)
-{
-    while (angle.x > 89.0f)
-        angle.x -= 180.f;
-
-    while (angle.x < -89.0f)
-        angle.x += 180.f;
-
-    while (angle.y > 180.f)
-        angle.y -= 360.f;
-
-    while (angle.y < -180.f)
-        angle.y += 360.f;
-}
-
-Vector3 CalcAngle(const Vector3& src, const Vector3& dst)
-{
-    Vector3 angle = Vector3();
-    Vector3 delta = Vector3((src.x - dst.x), (src.y - dst.y), (src.z - dst.z));
-
-    double distance = sqrt(delta.x * delta.x + delta.y * delta.y);
-
-    angle.x = atan(delta.z / distance) * (180.0f / 3.1415926535);
-    angle.y = atan(delta.y / delta.x) * (180.0f / 3.1415926535);
-    angle.z = 0;
-    if (delta.x >= 0.0) angle.y += 180.0f;
-
-    return angle;
-}
-
 void CFramework::RenderESP()
 {
     CEntity* pLocal = &local;
-
-    // AimBot
-    float FOV = 0.f;
-    float MinFov = FLT_MAX;
-    float MinDistance = FLT_MAX;
-    CEntity target = CEntity();
-    Vector2 ScreenMiddle = { g.g_GameRect.right / 2.f, g.g_GameRect.bottom / 2.f };
 
     // Localの更新に失敗したらこの関数を終了
     if (!pLocal->Update())
@@ -117,16 +75,11 @@ void CFramework::RenderESP()
         if (!pEntity->Update())
             continue;
 
-        std::vector<Vector3> BoneList;
-
-        if (g.g_AimBot || g.g_ESP_Skeleton)
-            BoneList = pEntity->GetBoneList();
-
         // 距離を取得
-        const float flDistance = ((pLocal->m_vOldOrigin - pEntity->m_vOldOrigin).Length() * 0.01905f);
+        const float pDistance = ((pLocal->m_vOldOrigin - pEntity->m_vOldOrigin).Length() * 0.01905f);
 
         // 各種チェック
-        if (g.g_ESP_MaxDistance < flDistance)
+        if (g.g_ESP_MaxDistance < pDistance)
             continue;
         else if (!g.g_ESP_Team && pEntity->m_iTeamNum == pLocal->m_iTeamNum)
             continue;
@@ -226,6 +179,8 @@ void CFramework::RenderESP()
         // Skeleton
         if (g.g_ESP_Skeleton)
         {
+            std::vector<Vector3> BoneList = pEntity->GetBoneList();
+
             if (BoneList.size() == 32) {
                 // 頭の円をレンダリング
                 Vector2 pHead, pNeck;
@@ -261,6 +216,8 @@ void CFramework::RenderESP()
                     DrawLine(vOut0, vOut1, color, 1.f);
                 }
             }
+
+            BoneList.clear();
         }
 
         // Healthbar
@@ -271,91 +228,24 @@ void CFramework::RenderESP()
 
         // Name
         if (g.g_ESP_Name) {
-            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(pEntity->m_namePlayer).x / 2.f), top - ImGui::GetFontSize()), TEXT_COLOR, ImGui::GetFontSize(), pEntity->m_namePlayer);
+            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(pEntity->pName).x / 2.f), top - ImGui::GetFontSize()), TEXT_COLOR, ImGui::GetFontSize() - 1, pEntity->pName);
         }
 
-        // DIstance & Weapon
+        // 
         std::string outStr;
 
         // Distance
-        if (g.g_ESP_Distance)
-            outStr += "[ " + std::to_string((int)flDistance) + "m ]";
-
-        // Weapon
-        if (g.g_ESP_CurrentWeapon)
-            outStr += " " + pEntity->m_nameWeapon;
-
-        // Rendering
-        if (g.g_ESP_Distance || g.g_ESP_CurrentWeapon)
-            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(outStr.c_str()).x / 2.f), bottom + 1), TEXT_COLOR, ImGui::GetFontSize(), outStr.c_str());
-
-        // AimBot
-        if (g.g_AimBot && pLocal->m_iTeamNum != pEntity->m_iTeamNum)
-        {
-            for (const auto& bone : BoneList)
-            {
-                if (flDistance > g.g_AimMaxDistance)
-                    break;
-
-                Vector2 BoneScreen{};
-                if (!WorldToScreen(ViewMatrix, g.g_GameRect, bone, BoneScreen))
-                    break;
-
-                // In FOV?
-                FOV = abs((ScreenMiddle - BoneScreen).Length());
-
-                if (FOV < g.g_AimFOV)
-                {
-                    switch (g.g_AimType)
-                    {
-                    case 0: // Crosshair
-                        if (MinFov > FOV) {
-                            if (target.address == NULL || MinDistance > flDistance)
-                            {
-                                target = entity;
-                                MinFov = FOV;
-                                MinDistance = flDistance;
-                            }
-                        }
-                        break;
-                    case 1: // Game Distance
-                        if (MinDistance > flDistance) {
-                            target = entity;
-                            MinDistance = flDistance;
-                        }
-                        break;
-                    }
-                }
-            }
+        if (g.g_ESP_Distance) {
+            outStr += "[ " + std::to_string((int)pDistance) + "m ]";
         }
 
-        BoneList.clear();
-    }
+        // Weapon
+        if (g.g_ESP_CurrentWeapon) {
+            outStr += " " + pEntity->pWeaponName;
+        }
 
-    if (target.address != NULL && AimAllow())
-    {
-        if (!target.m_nameClass.compare("cs_player_controller"))
-        {
-            int boneId = 1;
-            switch (g.g_AimBone)
-            {
-            case 0: boneId = BONE_HEAD; break;
-            case 1: boneId = BONE_NECK; break;
-            case 2: boneId = BONE_SPINE; break;
-            case 3: boneId = BONE_HIP; break;
-            default:
-                break;
-            }
-
-            Vector3 Angle = CalcAngle(pLocal->GetCameraPosition(), target.GetBoneByID(boneId));
-            Vector3 ViewAngle = pLocal->GetViewAngle();
-            Vector3 Delta = Angle - ViewAngle;
-            NormalizeAngles(Delta);
-            Vector3 SmoothedAngle = ViewAngle + (Delta / g.g_AimSmooth);
-            NormalizeAngles(SmoothedAngle);
-
-            if (!Vec3_Empty(SmoothedAngle))
-                m.Write<Vector3>(m.m_gClientBaseAddr + offset::dwViewAngles, SmoothedAngle);
+        if (g.g_ESP_Distance || g.g_ESP_CurrentWeapon) {
+            StringEx(Vector2(right - Center - (ImGui::CalcTextSize(outStr.c_str()).x / 2.f), bottom + 1), TEXT_COLOR, ImGui::GetFontSize(), outStr.c_str());
         }
     }
 

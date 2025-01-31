@@ -15,7 +15,6 @@ public:
     ImFont* icon;
 
     void UpdateList();
-    void MiscAll();
 
 	void RenderInfo();
 	void RenderMenu();
@@ -34,42 +33,8 @@ private:
     ImColor ESP_Visible = { 1.f, 0.f, 0.f, m_flGlobalAlpha };
     ImColor ESP_Team    = { 0.f, 0.75f, 1.f, m_flGlobalAlpha };
     ImColor ESP_Shadow  = { 0.f, 0.f, 0.f, m_flShadowAlpha };
-    ImColor AimFOV_Color = { 1.f, 1.f, 1.f, 0.35f };
     ImColor CrosshairColor = { 0.f, 1.f, 0.f, 1.f };
     ImColor TEXT_COLOR = { 1.f, 1.f, 1.f, m_flGlobalAlpha };
-
-    bool AimAllow()
-    {
-        if (g.g_AimKeyMode == 0)
-            return true;
-
-        // 前提チェック
-        if (g.g_AimKey_0 == NULL || !IsKeyDown(g.g_AimKey_0) && !IsKeyDown(g.g_AimKey_1) || g.g_ShowMenu) {
-            return false;
-        }
-
-        // 2nd
-        switch (g.g_AimKeyMode)
-        {
-        case 1: // and
-            if (g.g_AimKey_1 == NULL && IsKeyDown(g.g_AimKey_0))
-                break;
-            else if (!IsKeyDown(g.g_AimKey_0) || !IsKeyDown(g.g_AimKey_1))
-                return false;
-            else if (!IsKeyDown(g.g_AimKey_0))
-                return false;
-            break;
-        case 2: // or
-            if (g.g_AimKey_1 == NULL && IsKeyDown(g.g_AimKey_0))
-                break;
-            else if (IsKeyDown(g.g_AimKey_0) || IsKeyDown(g.g_AimKey_1))
-                break;
-
-            break;
-        }
-
-        return true;
-    }
 
     // Menu
     int Index = 0;

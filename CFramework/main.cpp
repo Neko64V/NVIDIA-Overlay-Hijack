@@ -32,7 +32,6 @@ void Overlay::OverlayUserInit()
 
 void Overlay::OverlayUserFunction()
 {
-	cheat->MiscAll();
 	cheat->RenderInfo();
 
 	if (g.g_ESP)

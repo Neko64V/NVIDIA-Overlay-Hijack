@@ -5,8 +5,6 @@ ConfigManager Config;
 char ConfigPath[] = ".\\Config\\";
 
 // ImGui::Combo/ImGui::List等で使う文字列群
-const char* AimBoneList[] = { "Head", "Neck", "Chest", "Spine" };
-const char* AimKeyModeList[] = { "None Key", "and", "or" };
 const char* BoxTypeList[] = { "Simple", "Cornered" };
 const char* CrosshairList[] = { "Cross", "Circle" };
 std::vector<const char*> MenuStringList = { "AimBot", "Visual", "Misc", "Setting" };
@@ -19,8 +17,7 @@ void CFramework::RenderMenu()
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
     
-    // Aim & Config
-    static int BindingID = 0;
+    // Config
     static int FileNum = 0;
     static char InputName[12];
     static bool DeleteFlag = false;
@@ -62,31 +59,11 @@ void CFramework::RenderMenu()
     switch (Index)
     {
     case 0:
-        ImGui::BeginChild("##C000", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 3.f), true);
-        ImGui::Text("Visual");
-        ImGui::Separator();
-        ImGui::Spacing();
 
-        ImGui::Checkbox("AimBot", &g.g_AimBot);
-
-        ImGui::EndChild();
-        ImGui::BeginChild("##C001", ImVec2(ImGui::GetContentRegionAvail()), true);
-
-        ImGui::Text("AimBot Setting");
-        ImGui::Separator();
-        ImGui::Spacing();
-        
-        ImGui::CustomSliderInt("Aim FOV", "##a_fov", &g.g_AimFOV, 30, 300);
-        ImGui::CustomSliderFloat("Smooth", "##a_smt", &g.g_AimSmooth, 1.f, 30.f);
-
-        ImGui::Spacing();
-        ImGui::Spacing();
-
-        ImGui::Combo("TargetBone", &g.g_AimBone, AimBoneList, IM_ARRAYSIZE(AimBoneList));
-
-        ImGui::EndChild();
         break;
     case 1: // visual
+       
+
         ImGui::BeginChild("##C010", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 3.f), true);
         ImGui::Text("Visual");
         ImGui::Separator();
@@ -129,8 +106,6 @@ void CFramework::RenderMenu()
         ImGui::Spacing();
         ImGui::Checkbox("Crosshair", &g.g_Crosshair);
 
-        ImGui::NewLine();
-
         ImGui::CustomSliderInt("MaxFramerate", "##MaxFrame", &g.g_MaxFramerate, 30, 500);
 
         ImGui::EndChild();
@@ -166,47 +141,7 @@ void CFramework::RenderMenu()
     switch (Index)
     {
     case 0:
-        ImGui::BeginChild("##C100", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 2.7f), true);
 
-        ImGui::Text("FOV Setting");
-        ImGui::Separator();
-        ImGui::Spacing();
-
-        ImGui::Checkbox("Draw FOV", &g.g_ShowFOV);
-        ImGui::Checkbox("Rainbow FOV", &g.g_ShowFOV);
-        //ImGui::Checkbox("Rainbow FOV", &g.g_RainbowFOV);
-        ImGui::ColorEdit3("Color", &AimFOV_Color.Value.x);
-        ImGui::CustomSliderFloat("Smooth", "##a_smt", &g.g_AimSmooth, 1.f, 30.f);
-
-        ImGui::EndChild();
-        ImGui::BeginChild("##101", ImVec2(ImGui::GetContentRegionAvail()), true);
-
-        ImGui::Text("KeyBind");
-        ImGui::Separator();
-        ImGui::Spacing();
-
-        ImGui::Combo("KeyMode", &g.g_AimKeyMode, AimKeyModeList, IM_ARRAYSIZE(AimKeyModeList));
-
-        ImGui::NewLine();
-
-        ImGui::Text("1st Key");
-        if (ImGui::Button(BindingID == 1 ? "< Press Any Key >" : KeyNames[g.g_AimKey_0], ImVec2(215.f, 22.5f))) {
-            BindingID = 1;
-            std::thread([&]() { KeyBinder(g.g_AimKey_0, BindingID); }).detach();
-        }
-
-        ImGui::Spacing();
-
-        ImGui::Text("2nd Key");
-        if (ImGui::Button(BindingID == 2 ? "< Press Any Key >" : KeyNames[g.g_AimKey_1], ImVec2(215.f, 22.5f))) {
-            BindingID = 2;
-            std::thread([&]() { KeyBinder(g.g_AimKey_1, BindingID); }).detach();
-        }
-
-        if (g.g_AimKey_0 == g.g_AimKey_1)
-            g.g_AimKey_1 = NULL;
-
-        ImGui::EndChild();
         break;
     case 1: // visual
         ImGui::BeginChild("##C110", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y / 2.75f), true);
