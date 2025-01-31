@@ -39,36 +39,6 @@ void CFramework::RenderInfo()
     ImGui::End();
 }
 
-void NormalizeAngles(Vector3& angle)
-{
-    while (angle.x > 89.0f)
-        angle.x -= 180.f;
-
-    while (angle.x < -89.0f)
-        angle.x += 180.f;
-
-    while (angle.y > 180.f)
-        angle.y -= 360.f;
-
-    while (angle.y < -180.f)
-        angle.y += 360.f;
-}
-
-Vector3 CalcAngle(const Vector3& src, const Vector3& dst)
-{
-    Vector3 angle = Vector3();
-    Vector3 delta = Vector3((src.x - dst.x), (src.y - dst.y), (src.z - dst.z));
-
-    double distance = sqrt(delta.x * delta.x + delta.y * delta.y);
-
-    angle.x = atan(delta.z / distance) * (180.0f / 3.1415926535);
-    angle.y = atan(delta.y / delta.x) * (180.0f / 3.1415926535);
-    angle.z = 0;
-    if (delta.x >= 0.0) angle.y += 180.0f;
-
-    return angle;
-}
-
 void CFramework::RenderESP()
 {
     CEntity* pLocal = &local;
@@ -131,14 +101,6 @@ void CFramework::RenderESP()
         else if (!g.g_ESP_Team && pEntity->m_iTeamNum == pLocal->m_iTeamNum)
             continue;
 
-        /* // 方法1 - 頭とベース座標の位置をベースにする
-        Vector2 pBase{}, pHead{};
-        const Vector3 Head = pEntity->GetEntityBonePosition(8) + Vector3(0.f, 0.f, 12.f);
-        if (!WorldToScreen(ViewMatrix, g.g_GameRect, pEntity->m_vecAbsOrigin + Vector3(0.f, 0.f, -6.f), pBase) || !WorldToScreen(ViewMatrix, g.g_GameRect, Head, pHead))
-            continue;
-        */
-
-        // 方法2 - m_Collision を使用する方法
         Vector3 min = pEntity->vecMin();
         Vector3 max = pEntity->vecMax();
 
@@ -289,14 +251,14 @@ void CFramework::RenderESP()
         if (g.g_ESP_Distance || g.g_ESP_CurrentWeapon)
             StringEx(Vector2(right - Center - (ImGui::CalcTextSize(outStr.c_str()).x / 2.f), bottom + 1), TEXT_COLOR, ImGui::GetFontSize(), outStr.c_str());
 
+        if (flDistance > g.g_AimMaxDistance)
+            continue;
+
         // AimBot
         if (g.g_AimBot && pLocal->m_iTeamNum != pEntity->m_iTeamNum)
         {
             for (const auto& bone : BoneList)
             {
-                if (flDistance > g.g_AimMaxDistance)
-                    break;
-
                 Vector2 BoneScreen{};
                 if (!WorldToScreen(ViewMatrix, g.g_GameRect, bone, BoneScreen))
                     break;
@@ -332,6 +294,7 @@ void CFramework::RenderESP()
         BoneList.clear();
     }
 
+    // AimBotを実行
     if (target.address != NULL && AimAllow())
     {
         if (!target.m_nameClass.compare("cs_player_controller"))

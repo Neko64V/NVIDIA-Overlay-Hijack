@@ -64,7 +64,7 @@ void CFramework::UpdateList()
 void CFramework::MiscAll()
 {
     // TriggerBot
-    if (pLocal->m_iIDEntIndex < 15000) {
+    if (pLocal->m_iIDEntIndex < 5000) {
         auto list_addr = m.Read<uintptr_t>(m.m_gClientBaseAddr + offset::dwEntityList);
         CEntity ent;
         ent.address = m.Read<uintptr_t>(list_addr + 8 * (pLocal->m_iIDEntIndex >> 9) + 0x10);
