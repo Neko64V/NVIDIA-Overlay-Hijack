@@ -15,6 +15,20 @@ struct Globals
     RECT g_GameRect{};
     POINT g_GamePoint{};
 
+    // AimBot
+    bool g_AimBot = false;
+    int g_AimFOV = 25.f;
+    bool g_ShowFOV = true;
+    float g_AimSmooth = 8.f;
+    int g_AimMode = 0;
+    int g_AimType = 0;
+    int g_AimBone = 1;
+    float g_AimMaxDistance = 50.f;
+
+    int g_AimKeyMode = 0;
+    int g_AimKey_0 = VK_SHIFT;
+    int g_AimKey_1 = VK_CONTROL;
+
     // Visual
     bool g_ESP      = true;
     bool g_ESP_Team = false;

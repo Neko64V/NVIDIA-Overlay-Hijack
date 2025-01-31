@@ -186,7 +186,7 @@ void LoadStyle()
 
     // Rounding
     style.WindowRounding = 0.f;
-    style.ChildRounding = 8.f;
+    style.ChildRounding = 6.f;
     style.FrameRounding = 0.f;
     style.PopupRounding = 0.f;
     style.TabRounding = 0.f;

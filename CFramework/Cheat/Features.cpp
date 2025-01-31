@@ -1,7 +1,7 @@
 #include "FrameCore.h"
 #pragma comment(lib, "WinMM.lib")
 
-const int ReadCount = 64;
+const int ReadCount = 1024;
 
 void CFramework::UpdateList()
 {
@@ -34,19 +34,49 @@ void CFramework::UpdateList()
             CEntity p = CEntity();
             p.address = m.Read<uintptr_t>(entity_entry + 120 * (i & 0x1FF));
 
-            if (entity_entry == pLocal->address)
-                continue;
+            uintptr_t classNamePtr = m.Read<uintptr_t>(m.Read<uintptr_t>(p.address + 0x10) + 0x20);
+            std::string class_name = m.ReadString_s(classNamePtr);
 
-            // get CSPlayerPawn and some data
-            if (!p.UpdateStatic(list_addr))
-                continue;
-            else if (!p.Update())
-                continue;
+            if (class_name.size() > 0) {
 
-            ent_list.push_back(p);
+                if (entity_entry == pLocal->address)
+                    continue;
+
+                // Player
+                if (!class_name.compare("cs_player_controller")) 
+                {
+                    if (!p.UpdateStatic(list_addr))
+                        continue;
+                    else if (!p.Update())
+                        continue;
+
+                    p.m_nameClass = class_name;
+                    ent_list.push_back(p);
+                }
+            }
         }
 
         EntityList = ent_list;
         ent_list.clear();
+    }
+}
+
+void CFramework::MiscAll()
+{
+    // TriggerBot
+    if (pLocal->m_iIDEntIndex < 15000) {
+        auto list_addr = m.Read<uintptr_t>(m.m_gClientBaseAddr + offset::dwEntityList);
+        CEntity ent;
+        ent.address = m.Read<uintptr_t>(list_addr + 8 * (pLocal->m_iIDEntIndex >> 9) + 0x10);
+
+        if (ent.TriggerAllow(list_addr, pLocal))
+        {
+            // Click
+            if (g.g_ESP_Team && pLocal->m_iTeamNum == ent.m_iTeamNum || pLocal->m_iTeamNum != ent.m_iTeamNum) {
+                /*
+                mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);*/
+            }
+        }
     }
 }
