@@ -10,6 +10,21 @@ bool CEntity::Update()
 		return false;
 
 	m_ArmorValue = m.Read<int>(m_pCSPlayerPawn + offset::m_ArmorValue);
+	m_iIDEntIndex = m.Read<uint32_t>(m_pCSPlayerPawn + offset::m_iIDEntIndex);
+
+	return true;
+}
+
+bool CEntity::TriggerAllow(const uintptr_t& entitylist, CEntity* local)
+{
+	// pointer
+	uintptr_t list = m.Read<uintptr_t>(entitylist + 0x8 * ((local->m_iIDEntIndex & 0x7FFF) >> 9) + 0x10);
+	m_pCSPlayerPawn = m.Read<uintptr_t>(list + 120 * (local->m_iIDEntIndex & 0x1FF));
+
+	if (!Update())
+		return false;
+
+	m_iTeamNum = m.Read<int>(address + offset::m_iTeamNum);
 
 	return true;
 }
@@ -35,22 +50,22 @@ bool CEntity::UpdateStatic(const uintptr_t& entitylist)
 	// entity data
 	m_iTeamNum = m.Read<int>(address + offset::m_iTeamNum);
 	m_iMaxHealth = m.Read<int>(m_pCSPlayerPawn + offset::m_iMaxHealth);
-
+	
 	// Name
 	uintptr_t nameAddress = m.Read<uintptr_t>(address + offset::m_sSanitizedPlayerName);
 
 	if (nameAddress != NULL) {
-		m.ReadString(nameAddress, &pName, sizeof(pName));
+		m.ReadString(nameAddress, &m_namePlayer, sizeof(m_namePlayer));
 	}
 
 	// Weapon name
 	uintptr_t pWeaponEntity = m.ReadChain(m_pClippingWeapon, { 0x10, 0x20 });
 
 	if (pWeaponEntity != NULL) {
-		pWeaponName = m.ReadString_s(pWeaponEntity);
+		m_nameWeapon = m.ReadString_s(pWeaponEntity);
 
-		if (pWeaponName.find("weapon_") != std::string::npos)
-			pWeaponName = pWeaponName.substr(7, pWeaponName.length());
+		if (m_nameWeapon.find("weapon_") != std::string::npos)
+			m_nameWeapon = m_nameWeapon.substr(7, m_nameWeapon.length());
 	}
 
 	return true;
@@ -74,6 +89,11 @@ uint32_t CEntity::GetFlag()
 bool CEntity::IsDead()
 {
 	return m.Read<int>(address + offset::m_lifeState) > 0;
+}
+
+Vector3 CEntity::GetBoneByID(const int ID)
+{
+	return m.Read<Vector3>(m_pBoneArray + (ID * 0x20));
 }
 
 std::vector<Vector3> CEntity::GetBoneList()
